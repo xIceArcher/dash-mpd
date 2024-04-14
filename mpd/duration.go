@@ -34,7 +34,9 @@ type Duration time.Duration
 
 const (
 	rStart   = "^P"          // Must start with a 'P'
-	rDays    = "(\\d+D)?"    // We only allow Days for durations, not Months or Years
+	rYears   = "(?:0Y)?"     // Only allow 0 Years
+	rMonths  = "(?:0M)?"     // Only allow 0 Months
+	rDays    = "(\\d+D)?"    // We only allow non-zero Days for durations
 	rTime    = "(?:T"        // If there's any 'time' units then they must be preceded by a 'T'
 	rHours   = "(\\d+H)?"    // Hours
 	rMinutes = "(\\d+M)?"    // Minutes
@@ -42,7 +44,7 @@ const (
 	rEnd     = ")?$"         // end of regex must close "T" capture group
 )
 
-var xmlDurationRegex = regexp.MustCompile(rStart + rDays + rTime + rHours + rMinutes + rSeconds + rEnd)
+var xmlDurationRegex = regexp.MustCompile(rStart + rYears + rMonths + rDays + rTime + rHours + rMinutes + rSeconds + rEnd)
 
 func (d *Duration) MarshalXMLAttr(name xml.Name) (xml.Attr, error) {
 	if d == nil {
